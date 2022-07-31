@@ -8,31 +8,28 @@
 </svg>
 <script>
 async function init() {
-  var x = d3.scaleBand().domain([0,202]).range([0,2020]);
-  var y = d3.scaleLinear().domain([0,1]).range([200,0]);
-  
-  xdomain = [0,202];
-  xrange = [0,2020];
-  ydomain = [0,1];
-  yrange = [200,0];
-  cdomain = [0,1];
-  crange = ['blue','orange'];
+  var x = d3.scaleLog().domain([10,150]).range([0,200]);
+  var y = d3.scaleLog().domain([10,150]).range([200,0]);
 
-  xs = d3.scaleLinear().domain(xdomain).range(xrange);
-  ys = d3.scaleLinear().domain(ydomain).range(yrange);
-  cs = d3.scaleLinear().domain(cdomain).range(crange);
+  const data = await d3.csv('https://flunky.github.io/cars2017.csv');
 
-  
-  const data = await d3.csv('https://docs.google.com/spreadsheets/d/1fJ7RJibcGHNu0uP06qKi8BAKyVd2IvCqTGqUE9HpHq8/export?format=csv');
-  
   d3.select("svg")
-    .append("g")
-    .attr("transform","translate(50,50)")
-    .selectAll('rect').data(data).enter().append('rect')
-    .attr('x', function(d,i) { return xs(i);})
-    .attr('y', function(d,i) {return ys(d);})
-    .attr('width', 10)
-    .attr('height', function(d,i) { return 200 - y(d);});
+     .append("g")
+     .attr("transform","translate(50,50)")
+     .selectAll('circle').data(data).enter().append('circle')
+      .attr('cx', function(d,i) {return x(d.AverageCityMPG);})
+      .attr('cy', function(d,i) {return y(d.AverageHighwayMPG);})
+      .attr('r', function(d,i) {return 2 + Number(d.EngineCylinders);});
+
+
+  d3.select("svg").append("g")
+     .attr("transform","translate(50,50)")
+     .call(d3.axisLeft(y).tickValues([10,20,50,100]).tickFormat(d3.format("~s")));
+
+  d3.select("svg").append("g")
+     .attr("transform","translate(50,250)")
+     .call(d3.axisBottom(x).tickValues([10,20,50,100]).tickFormat(d3.format("~s")));
+
     
   
 }
