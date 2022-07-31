@@ -6,27 +6,27 @@
 </svg>
 <script>
 async function init() {
-  var x = d3.scaleLog().domain([10,150]).range([0,500]);
-  var y = d3.scaleLog().domain([10,150]).range([500,0]);
+  var x = d3.scaleLinear().domain([0,60]).range([0,500]);
+  var y = d3.scaleLinear().domain([0,100]).range([500,0]);
 
-  const data = await d3.csv('https://flunky.github.io/cars2017.csv');
+  const data = await d3.csv('https://docs.google.com/spreadsheets/d/1fJ7RJibcGHNu0uP06qKi8BAKyVd2IvCqTGqUE9HpHq8/export?format=csv');
 
   d3.select("svg")
     .append("g")
     .attr("transform","translate(50,50)")
     .selectAll('circle').data(data).enter().append('circle')
-    .attr('cx', function(d,i) {return x(d.AverageCityMPG);})
-    .attr('cy', function(d,i) {return y(d.AverageHighwayMPG);})
-    .attr('r', function(d,i) {return 2 + Number(d.EngineCylinders);});
+    .attr('cx', function(d,i) {return x(d.NumberInternetPlans);})
+    .attr('cy', function(d,i) {return y(100 * Number(d.PercentAccess));})
+    .attr('r', function(d,i) {return 2;});
 
 
   d3.select("svg").append("g")
     .attr("transform","translate(50,50)")
-    .call(d3.axisLeft(y).tickValues([10,20,50,100]).tickFormat(d3.format("~s")));
+    .call(d3.axisLeft(y).tickFormat(d3.format("~s")));
 
   d3.select("svg").append("g")
     .attr("transform","translate(50,550)")
-    .call(d3.axisBottom(x).tickValues([10,20,50,100]).tickFormat(d3.format("~s")));
+    .call(d3.axisBottom(x).tickValues([0,5,10,25,50]).tickFormat(d3.format("~s")));
 }
 </script>
 </body>
