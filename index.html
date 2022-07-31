@@ -1,5 +1,17 @@
 <html>
 <h1>Testing!</h>
 <script src='https://d3js.org/d3.v5.min.js'></script>
-
+  
+<style> rect {fill: lightblue; stroke: black;} </style>
+<body onload='init()'>
+<svg width=300 height=300>
+</svg>
+<script>
+async function init() {
+  const data = await d3.csv('https://docs.google.com/spreadsheets/d/1fJ7RJibcGHNu0uP06qKi8BAKyVd2IvCqTGqUE9HpHq8/export?format=csv');
+  var lines = csv.split("\n").length;
+  <p1>lines</p>
+}
+</script>
+</body>
 </html>
