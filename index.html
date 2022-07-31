@@ -26,7 +26,7 @@ async function init() {
 
   d3.select("svg").append("g")
     .attr("transform","translate(50,550)")
-    .call(d3.axisBottom(x).tickValues([0,5,10,25,50]).tickFormat(d3.format("~s")));
+    .call(d3.axisBottom(x).tickFormat(d3.format("~s")));
 }
 </script>
 </body>
