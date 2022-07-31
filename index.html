@@ -4,13 +4,37 @@
   
 <style> rect {fill: lightblue; stroke: black;} </style>
 <body onload='init()'>
-<svg width=300 height=300>
+<svg width=2120 height=300>
 </svg>
 <script>
 async function init() {
+  var x = d3.scaleBand().domain([0,202]).range([0,2020]);
+  var y = d3.scaleLinear().domain([0,1]).range([200,0]);
+  
+  xdomain = [0,202];
+  xrange = [0,2020];
+  ydomain = [0,1];
+  yrange = [200,0];
+  cdomain = [0,1];
+  crange = ['blue','orange'];
+
+  xs = d3.scaleLinear().domain(xdomain).range(xrange);
+  ys = d3.scaleLinear().domain(ydomain).range(yrange);
+  cs = d3.scaleLinear().domain(cdomain).range(crange);
+
+  
   const data = await d3.csv('https://docs.google.com/spreadsheets/d/1fJ7RJibcGHNu0uP06qKi8BAKyVd2IvCqTGqUE9HpHq8/export?format=csv');
-  var lines = csv.split("\n").length;
-  <p1>lines</p>
+  
+  d3.select("svg")
+    .append("g")
+    .attr("transform","translate(50,50)")
+    .selectAll('rect').data(data).enter().append('rect')
+    .attr('x', function(d,i) { return xs(i);})
+    .attr('y', function(d,i) {return ys(d);})
+    .attr('width', 10)
+    .attr('height', function(d,i) { return 200 - y(d);});
+    
+  
 }
 </script>
 </body>
