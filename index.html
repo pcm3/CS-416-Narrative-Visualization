@@ -17,6 +17,7 @@
 }
 .button1 {background-color: #4CAF50;}
 .button2 {background-color: #008CBA;}
+.button3 {background-color: purple;}
   body{align-items:center;}
   #tooltip {
      opacity: 0;
@@ -36,7 +37,9 @@
 <body onload='init()'>
   <button class="button button1" onclick="ByGDP()">Access By Countries By GDP</button>
   <button class="button button2" onclick="ByRegion()">Access By Region</button>
+  <button class="button button3" onclick="ByProviders()">Access By Number Of Providers</button>
   <br>
+  <p id="demo"></p>
 <svg class="chart"></svg>
 <svg class="chart2"></svg>
 <div id="tooltip"></div>
@@ -90,7 +93,9 @@
       .attr("x", 9)
       .attr("dy", ".35em")
       .attr("transform", "rotate(90)")
-      .style("text-anchor", "start")
+      .style("text-anchor", "start");
+
+      document.getElementById("demo").innerHTML = "There is a drastic disparity based solely off of the region of the world that you're born into. It's clear that different parts of the world aren't getting enough support.";
 
   }
 async function ByGDP() {
@@ -128,6 +133,47 @@ var tooltip = d3.select("#tooltip");
   d3.select("svg").append("g")
     .attr("transform","translate(50,550)")
     .call(d3.axisBottom(x).tickValues([500,1000,5000,10000,50000,100000,200000]).tickFormat(d3.format("~s")));
+
+    document.getElementById("demo").innerHTML = "As the average GDP per capita increases, so does the access to internet. This supports the idea that those with money retain the knowledge and it's difficult to bridge the gap.";
+}
+
+async function ByProviders() {
+  d3.select(".chart").selectAll("*").remove();
+  var x = d3.scaleLinear().domain([0,60]).range([0,500]);
+  var y = d3.scaleLinear().domain([0,100]).range([500,0]);
+
+  var data = await d3.csv('https://docs.google.com/spreadsheets/d/1fJ7RJibcGHNu0uP06qKi8BAKyVd2IvCqTGqUE9HpHq8/export?format=csv');
+var tooltip = d3.select("#tooltip");
+  d3.select(".chart")
+    .attr("width", 600)
+    .attr("height", 600)
+    .append("g")
+    .attr("transform","translate(50,50)")
+    .selectAll('circle').data(data).enter().append('circle')
+    //.attr('cx', x(270))
+    //.attr('cy', y(0))
+    .attr('r', function(d,i) {return 5;})
+    //.transition().duration(3000)
+    .attr('cx', function(d,i) {return x(d.NumberInternetPlans);})
+    .attr('cy', function(d,i) {return y(100 * Number(d.PercentAccess));})
+    .on("mouseover", function(d,i) {
+       tooltip.style("opacity",1)
+         .style("left",(d3.event.pageX)+"px")
+         .style("top", (d3.event.pageY)+"px")
+         .html("Country: " + d.Country);
+     })
+    .on("mouseout", function() { tooltip.style("opacity",0) });
+
+
+  d3.select("svg").append("g")
+    .attr("transform","translate(50,50)")
+    .call(d3.axisLeft(y).tickFormat(d3.format("~s")));
+
+  d3.select("svg").append("g")
+    .attr("transform","translate(50,550)")
+    .call(d3.axisBottom(x).tickFormat(d3.format("~s")));
+
+    document.getElementById("demo").innerHTML = "As can be seen, there is no correlation between the number of providers available and the percent population that can access internet. Therefore, just creating more internet providers won't benefit the issue.";
 }
 </script>
 </body>
