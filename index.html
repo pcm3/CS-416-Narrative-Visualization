@@ -1,27 +1,91 @@
 <html>
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <style> 
-.chart circle {fill: lightblue; stroke: black;} 
-#tooltip {
-   opacity: 0;
-   position: absolute;
-   text-align: center;
-   width: 60px; height: 40px;
-   background: white;
-   border 0px;
+  .chart circle {fill: lightblue; stroke: black;} 
+  rect {fill: lightblue; stroke: black;}
+  
+  .button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
 }
-</style>
+.button1 {background-color: #4CAF50;}
+.button2 {background-color: #008CBA;}
+  body{align-items:center;}
+  #tooltip {
+     opacity: 0;
+     position: absolute;
+     text-align: center;
+     width:200px; height: 40px;
+     background: white;
+     border: 0px;
+  }
+  h1 {text-align: center;}
+  p {text-align: center;}
+  </style>
+<h1>Global Internet Access</h1>
+<p>As technology continues to grow at an exponential rate, having easy access to internet is becoming an invaluable resource.<br>A lack of internet limits both access to knowledge and access to opportunity.<br><br>Unfortunately, there is a large disparity present in the world when it comes to availability of internet in different regions of the world.<br>If the playing fields are not able to be leveled out, the chasm between the countries on top and those on bottom will only further expand.<br></p>
+
 
 <body onload='init()'>
+  <button class="button button1" onclick="ByGDP()">Access By Countries By GDP</button>
+  <button class="button button2" onclick="ByRegion()">Access By Region</button>
+  <br>
 <svg class="chart"></svg>
+<svg class="chart2"></svg>
 <div id="tooltip"></div>
 
+
 <script>
-async function init() {
-  var x = d3.scaleLinear().domain([0,60]).range([0,500]);
+  async function ByRegion() {
+    d3.select(".chart").selectAll("*").remove();
+    var data = await d3.csv('https://docs.google.com/spreadsheets/d/1uhn7OoSkJLbQjXfLaP_ypGzMdrgheR4ZAm-tihKMsN4/export?format=csv');
+    var x = d3.scaleBand().domain([0,1,2,3,4,5,6,7,8,9,10,11,12]).range([0,500]);
+    var y = d3.scaleLinear().domain([0,1]).range([500,0]);
+
+    xdomain = [0,12];
+    xrange = [0,500];
+    ydomain = [0,1];
+    yrange = [500,0];
+    cdomain = [0,1];
+    crange = ['blue','orange'];
+
+    xs = d3.scaleLinear().domain(xdomain).range(xrange);
+    ys = d3.scaleLinear().domain(ydomain).range(yrange);
+    cs = d3.scaleLinear().domain(cdomain).range(crange);
+
+    d3.select(".chart")
+      .attr("width", 600)
+      .attr("height", 600)
+      .append("g")
+      .attr("transform","translate(50,50)")
+      .selectAll('rect').data(data).enter().append('rect')
+        .attr('x',function(d,i) {return xs(i);})
+        .attr('y', function(d,i) {return ys(d.RegionAccess);})
+        .attr('width',33.3333)
+        .attr('height', function(d,i) {return 500 - ys(d.RegionAccess);});
+
+    d3.select("svg").append("g")
+      .attr("transform","translate(50,50)")
+      .call(d3.axisLeft(y));
+
+    d3.select("svg").append("g")
+      .attr("transform","translate(50,550)")
+      .call(d3.axisBottom(x));
+
+  }
+async function ByGDP() {
+  d3.select(".chart").selectAll("*").remove();
+  var x = d3.scaleLog().domain([270,200000]).range([0,500]);
   var y = d3.scaleLinear().domain([0,100]).range([500,0]);
 
-  const data = await d3.csv('https://docs.google.com/spreadsheets/d/1fJ7RJibcGHNu0uP06qKi8BAKyVd2IvCqTGqUE9HpHq8/export?format=csv');
+  var data = await d3.csv('https://docs.google.com/spreadsheets/d/1fJ7RJibcGHNu0uP06qKi8BAKyVd2IvCqTGqUE9HpHq8/export?format=csv');
 var tooltip = d3.select("#tooltip");
   d3.select(".chart")
     .attr("width", 600)
@@ -29,9 +93,12 @@ var tooltip = d3.select("#tooltip");
     .append("g")
     .attr("transform","translate(50,50)")
     .selectAll('circle').data(data).enter().append('circle')
-    .attr('cx', function(d,i) {return x(d.NumberInternetPlans);})
-    .attr('cy', function(d,i) {return y(100 * Number(d.PercentAccess));})
+    //.attr('cx', x(270))
+    //.attr('cy', y(0))
     .attr('r', function(d,i) {return 5;})
+    //.transition().duration(3000)
+    .attr('cx', function(d,i) {return x(d.GdpPerCapita);})
+    .attr('cy', function(d,i) {return y(100 * Number(d.PercentAccess));})
     .on("mouseover", function(d,i) {
        tooltip.style("opacity",1)
          .style("left",(d3.event.pageX)+"px")
@@ -47,7 +114,7 @@ var tooltip = d3.select("#tooltip");
 
   d3.select("svg").append("g")
     .attr("transform","translate(50,550)")
-    .call(d3.axisBottom(x).tickFormat(d3.format("~s")));
+    .call(d3.axisBottom(x).tickValues([500,1000,5000,10000,50000,100000,200000]).tickFormat(d3.format("~s")));
 }
 </script>
 </body>
