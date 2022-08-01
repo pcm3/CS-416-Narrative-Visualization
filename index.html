@@ -85,6 +85,14 @@
       .attr("transform","translate(50,50)")
       .call(d3.axisLeft(y));
 
+      d3.select('svg').append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0)
+      .attr("x",-300)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Percent Access");
+
     d3.select("svg").append("g")
       .attr("transform","translate(50,550)")
       .call(d3.axisBottom(x))
@@ -94,6 +102,13 @@
       .attr("dy", ".35em")
       .attr("transform", "rotate(90)")
       .style("text-anchor", "start");
+
+      d3.select("svg").append("text")             
+      .attr("transform",
+            "translate(" + (300) + " ," + 
+                           (600 + 70 + 20) + ")")
+      .style("text-anchor", "middle")
+      .text("World Region");
 
       document.getElementById("demo").innerHTML = "There is a drastic disparity based solely off of the region of the world that you're born into. It's clear that different parts of the world aren't getting enough support.";
 
@@ -130,9 +145,24 @@ var tooltip = d3.select("#tooltip");
     .attr("transform","translate(50,50)")
     .call(d3.axisLeft(y).tickFormat(d3.format("~s")));
 
+    d3.select('svg').append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0)
+      .attr("x",-300)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Percent Access");
+
   d3.select("svg").append("g")
     .attr("transform","translate(50,550)")
     .call(d3.axisBottom(x).tickValues([500,1000,5000,10000,50000,100000,200000]).tickFormat(d3.format("~s")));
+
+    d3.select("svg").append("text")             
+      .attr("transform",
+            "translate(" + (300) + " ," + 
+                           (500 + 70 + 20) + ")")
+      .style("text-anchor", "middle")
+      .text("Average GDP");
 
     document.getElementById("demo").innerHTML = "As the average GDP per capita increases, so does the access to internet. This supports the idea that those with money retain the knowledge and it's difficult to bridge the gap.";
 }
@@ -169,9 +199,24 @@ var tooltip = d3.select("#tooltip");
     .attr("transform","translate(50,50)")
     .call(d3.axisLeft(y).tickFormat(d3.format("~s")));
 
+    d3.select('svg').append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0)
+      .attr("x",-300)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Percent Access");
+
   d3.select("svg").append("g")
     .attr("transform","translate(50,550)")
     .call(d3.axisBottom(x).tickFormat(d3.format("~s")));
+
+    d3.select("svg").append("text")             
+      .attr("transform",
+            "translate(" + (300) + " ," + 
+                           (500 + 70 + 20) + ")")
+      .style("text-anchor", "middle")
+      .text("Number Providers");
 
     document.getElementById("demo").innerHTML = "As can be seen, there is no correlation between the number of providers available and the percent population that can access internet. Therefore, just creating more internet providers won't benefit the issue.";
 }
